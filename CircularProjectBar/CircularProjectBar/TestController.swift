@@ -9,15 +9,17 @@
 import UIKit
 
 class TestController: UIViewController {
-
+    
     
     let shapeLayer = CAShapeLayer()
-
+    
     override func viewDidLoad() {
         
         view.backgroundColor = UIColor.blue
         
         let layer = CAShapeLayer()
+        let trackLayer = CAShapeLayer()
+        
         let bounds = CGRect(x: 50, y: 50, width: 250, height: 250)
         layer.path = UIBezierPath(roundedRect: bounds, byRoundingCorners: .allCorners, cornerRadii: CGSize(width: 20, height: 20)).cgPath
         layer.strokeColor = UIColor.white.cgColor
@@ -35,20 +37,33 @@ class TestController: UIViewController {
         layer.add(animation, forKey: "line")
         
         view.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleTap)))
+     
+        //Track-Line
+        let center = view.center
+        let circularPath = UIBezierPath(arcCenter: center, radius: 100, startAngle: -CGFloat.pi / 2, endAngle: 2 * CGFloat.pi, clockwise: true)
+        
+        trackLayer.path = circularPath.cgPath
+        trackLayer.strokeColor = UIColor.lightGray.cgColor
+        trackLayer.lineWidth = 5
+        trackLayer.lineCap = .round  //very small visual.  How the line end points look
+        trackLayer.fillColor = UIColor.clear.cgColor
+        view.layer.addSublayer(trackLayer)
+        
         
         //drawing circle
-        let center = view.center
-        let circularPath = UIBezierPath(arcCenter: center, radius: 100, startAngle: 0, endAngle: 2 * CGFloat.pi, clockwise: true)
         shapeLayer.path = circularPath.cgPath
         shapeLayer.strokeColor = UIColor.green.cgColor
         shapeLayer.lineWidth = 10
-        shapeLayer.strokeEnd = 0    //Without this line, the circle appears surrounded by Green Ring
+        shapeLayer.strokeEnd = 0    //Without this line, the circle appears surrounded by Green Ring @start
+        shapeLayer.lineCap = .round  //very small visual.  How the line end points look
+        //shapeLayer.fillColor = UIColor.white.cgColor
+        shapeLayer.fillColor = UIColor.clear.cgColor
         view.layer.addSublayer(shapeLayer)
     }
     
     @objc func handleTap(){
         print("--TAP registered--")
-
+        
         
         //strokeEnd --> 0 = beginning of path & 1 = end of path
         shapeLayer.strokeEnd = 0 //initial value
@@ -62,7 +77,8 @@ class TestController: UIViewController {
         basicAnimation.isRemovedOnCompletion = true
         
         
-        shapeLayer.add(basicAnimation, forKey: "appleSauze") //GO GO GO
+        shapeLayer.add(basicAnimation, forKey: "appleSauze") //Key can be any random string //notice it's different than other CBasicAnimation lines
+        
     }
     
     
