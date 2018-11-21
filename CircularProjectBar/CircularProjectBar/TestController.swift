@@ -8,7 +8,19 @@
 
 import UIKit
 
-class TestController: UIViewController {
+class TestController: UIViewController, URLSessionDownloadDelegate {
+    
+    func urlSession(_ session: URLSession, downloadTask: URLSessionDownloadTask, didFinishDownloadingTo location: URL) {
+        print("Finishing downloading file")
+    }
+    
+    func urlSession(_ session: URLSession, downloadTask: URLSessionDownloadTask, didWriteData bytesWritten: Int64, totalBytesWritten: Int64, totalBytesExpectedToWrite: Int64) {
+        print("Total Written = \(totalBytesWritten)   .... Total Expected to \(totalBytesExpectedToWrite)")
+
+        let percentage = Float(totalBytesWritten) / Float(totalBytesExpectedToWrite)
+        
+        print("Total Written = \(totalBytesWritten)   .... Total Expected to \(totalBytesExpectedToWrite) ... % = \(percentage)")
+    }
     
     
     let shapeLayer = CAShapeLayer()
@@ -59,10 +71,19 @@ class TestController: UIViewController {
         view.layer.addSublayer(shapeLayer)
     }
     
-    @objc func handleTap(){
-        print("--TAP registered--")
+         let urlString = "https://firebasestorage.googleapis.com/v0/b/firestorechat-e64ac.appspot.com/o/intermediate_training_rec.mp4?alt=media&token=e20261d0-7219-49d2-b32d-367e1606500c"
+
+    func beginDownloadingFile(){
+        print("Downloading File")
         
+        let urlSession = URLSession(configuration: URLSessionConfiguration.default, delegate: self, delegateQueue: OperationQueue()) //operationQueue is the queue where we execute our download tasks
         
+        guard let url = URL(string: urlString) else {return}
+        let downloadTask = urlSession.downloadTask(with: url)
+            downloadTask.resume()   //kick-off the download
+    }
+    
+    fileprivate func animateCircle() {
         //strokeEnd --> 0 = beginning of path & 1 = end of path
         shapeLayer.strokeEnd = 0 //initial value
         let basicAnimation = CABasicAnimation(keyPath: "strokeEnd")
@@ -75,8 +96,12 @@ class TestController: UIViewController {
         basicAnimation.isRemovedOnCompletion = true
         
         
-        shapeLayer.add(basicAnimation, forKey: "appleSauze") //Key can be any random string //notice it's different than other CBasicAnimation lines
-        
+        shapeLayer.add(basicAnimation, forKey: "appleSauze")
+    }
+    
+    @objc func handleTap(){
+        beginDownloadingFile()
+        animateCircle() //Key can be any random string //notice it's different than other CBasicAnimation lines
     }
     
     
