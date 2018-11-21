@@ -17,7 +17,12 @@ class TestController: UIViewController, URLSessionDownloadDelegate {
     func urlSession(_ session: URLSession, downloadTask: URLSessionDownloadTask, didWriteData bytesWritten: Int64, totalBytesWritten: Int64, totalBytesExpectedToWrite: Int64) {
         print("Total Written = \(totalBytesWritten)   .... Total Expected to \(totalBytesExpectedToWrite)")
 
-        let percentage = Float(totalBytesWritten) / Float(totalBytesExpectedToWrite)
+        let percentage = CGFloat(totalBytesWritten) / CGFloat(totalBytesExpectedToWrite)
+        
+        DispatchQueue.main.async {
+            self.shapeLayer.strokeEnd = percentage
+        }
+        
         
         print("Total Written = \(totalBytesWritten)   .... Total Expected to \(totalBytesExpectedToWrite) ... % = \(percentage)")
     }
@@ -76,6 +81,9 @@ class TestController: UIViewController, URLSessionDownloadDelegate {
     func beginDownloadingFile(){
         print("Downloading File")
         
+        
+        shapeLayer.strokeEnd = 0  //This resolves error where we don't redraw the circle a second, third, etc. time properly.  ONly the first time.
+        
         let urlSession = URLSession(configuration: URLSessionConfiguration.default, delegate: self, delegateQueue: OperationQueue()) //operationQueue is the queue where we execute our download tasks
         
         guard let url = URL(string: urlString) else {return}
@@ -101,7 +109,7 @@ class TestController: UIViewController, URLSessionDownloadDelegate {
     
     @objc func handleTap(){
         beginDownloadingFile()
-        animateCircle() //Key can be any random string //notice it's different than other CBasicAnimation lines
+//        animateCircle() //Key can be any random string //notice it's different than other CBasicAnimation lines
     }
     
     
