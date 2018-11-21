@@ -54,13 +54,17 @@ class TestController: UIViewController, URLSessionDownloadDelegate {
         view.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleTap)))
      
         //Track-Line
-        let center = view.center
-        let circularPath = UIBezierPath(arcCenter: center, radius: 100, startAngle: -CGFloat.pi / 2, endAngle: 2 * CGFloat.pi, clockwise: true)
+//        let center = view.center
+//        let circularPath = UIBezierPath(arcCenter: center, radius: 100, startAngle: -CGFloat.pi / 2, endAngle: 2 * CGFloat.pi, clockwise: true)
+        
+        
+        let circularPath = UIBezierPath(arcCenter: .zero, radius: 100, startAngle: 0, endAngle: 2 * CGFloat.pi, clockwise: true)  //moved it to top, left corner
         
         trackLayer.path = circularPath.cgPath
         trackLayer.strokeColor = UIColor.lightGray.cgColor
         trackLayer.lineWidth = 5
         trackLayer.lineCap = .round  //very small visual.  How the line end points look
+        trackLayer.position = view.center
         trackLayer.fillColor = UIColor.clear.cgColor
         view.layer.addSublayer(trackLayer)
         
@@ -73,6 +77,9 @@ class TestController: UIViewController, URLSessionDownloadDelegate {
         shapeLayer.lineCap = .round  //very small visual.  How the line end points look
         //shapeLayer.fillColor = UIColor.white.cgColor
         shapeLayer.fillColor = UIColor.clear.cgColor
+        
+        shapeLayer.position = view.center
+        
         view.layer.addSublayer(shapeLayer)
     }
     
