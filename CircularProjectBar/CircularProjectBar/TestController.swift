@@ -12,21 +12,19 @@ class TestController: UIViewController {
     
     
     let shapeLayer = CAShapeLayer()
+    let layer = CAShapeLayer()
+    let trackLayer = CAShapeLayer()
     
     override func viewDidLoad() {
-        
         view.backgroundColor = UIColor.blue
-        
-        let layer = CAShapeLayer()
-        let trackLayer = CAShapeLayer()
-        
+       
+        //layer
         let bounds = CGRect(x: 50, y: 50, width: 250, height: 250)
         layer.path = UIBezierPath(roundedRect: bounds, byRoundingCorners: .allCorners, cornerRadii: CGSize(width: 20, height: 20)).cgPath
         layer.strokeColor = UIColor.white.cgColor
         layer.fillColor = nil
         layer.lineDashPattern = [8, 6]
         view.layer.addSublayer(layer)
-        
         
         let animation = CABasicAnimation(keyPath: "strokeEnd")
         animation.fromValue = 0
